@@ -1,31 +1,51 @@
+/* App.css */
+
+/* Adjust spacing and alignment */
 .smaller-logo {
-    max-width: 150px; /* Adjust as per your logo's dimensions */
-    height: auto; /* Maintain aspect ratio */
-  }
-  
-  .input-group {
-    width: 100%; /* Adjust width as needed */
-  }
-  
-  .form-control {
-    border-radius: 20px; /* Adjust border-radius for rounded corners */
-    font-size: 16px; /* Adjust font size */
-  }
-  
-  .input-group-text {
-    background-color: transparent; /* Ensure the search icon background is transparent */
-    border: none; /* Remove border */
-    color: #f9a620; /* Adjust icon color */
-  }
-  
-  .yellow-background {
-    background-color: #f9a620;
-    height: 100vh; /* Full viewport height */
-  }
-  
-  .inner-content {
-    padding: 20px; /* Adjust padding as needed */
-  }
+  max-width: 150px; /* Adjust as per your logo's dimensions */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 300px; /* Adjust the width as needed */
+}
+
+/* Custom styles for yellow background section */
+.yellow-background {
+  background-color: #f9a620;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+}
+
+.inner-content {
+  padding: 20px; /* Adjust padding as needed */
+}
+
+.form-control {
+  border-radius: 20px; /* Adjust border-radius for rounded corners */
+  font-size: 16px; /* Adjust font size */
+}
+
+.input-group-text {
+  background-color: transparent; /* Ensure the search icon background is transparent */
+  border: none; /* Remove border */
+  color: #f9a620; /* Adjust icon color */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.books-container {
+  padding: 20px;
+}
+
+.book-item {
+  margin-bottom: 20px;
+}
+
   
     
   
