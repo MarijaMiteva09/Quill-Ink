@@ -7,7 +7,7 @@ import SearchBar from './menu/SearchBar';
 import Dropdown from './menu/Dropdown';
 import BookDetails from './menu/BookDetails';
 import SearchResults from './menu/SearchResults';
-
+import FeaturedBooks from '../src/featuredbooks/FeaturedBooks';
 
 function App() {
   return (
@@ -25,10 +25,7 @@ function App() {
             <div className="row mt-3 justify-content-center">
               <div className="col-md-12 p-0">
                 <div className="yellow-background d-flex align-items-center justify-content-center">
-                  <div className="inner-content text-center">
-                    <h3 className="text-center">Yellow Background Section</h3>
-                    <p className="text-center">This is a new section with a yellow background.</p>
-                  </div>
+                  <FeaturedBooks />
                 </div>
               </div>
             </div>
