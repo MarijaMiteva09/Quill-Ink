@@ -6,6 +6,8 @@ import Logo from './menu/Logo';
 import SearchBar from './menu/SearchBar';
 import Dropdown from './menu/Dropdown';
 import BookDetails from './menu/BookDetails';
+import SearchResults from './menu/SearchResults';
+
 
 function App() {
   return (
@@ -33,12 +35,14 @@ function App() {
           </div>
         } />
         <Route path="/category/:categoryId" element={<BookDetails />} />
+        <Route path="/results" element={<SearchResults />} /> 
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
+
 
 
 
