@@ -1,5 +1,9 @@
 /* App.css */
 
+body {
+  overflow-x: hidden;
+}
+
 /* Adjust spacing and alignment */
 .smaller-logo {
   max-width: 150px; /* Adjust as per your logo's dimensions */
@@ -45,7 +49,3 @@ body {
 .book-item {
   margin-bottom: 20px;
 }
-
-  
-    
-  
