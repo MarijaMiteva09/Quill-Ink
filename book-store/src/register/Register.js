@@ -11,13 +11,13 @@ function Register() {
     e.preventDefault();
     try {
       // Replace with your registration API endpoint
-      const response = await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('http://localhost:3001/register', {
         email,
         password
       });
 
       // Check for successful registration response
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Redirect to home page
         navigate('/');
       }
