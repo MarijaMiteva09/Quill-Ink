@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './App.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import Logo from './menu/Logo';
@@ -8,6 +8,8 @@ import Dropdown from './menu/Dropdown';
 import BookDetails from './menu/BookDetails';
 import SearchResults from './menu/SearchResults';
 import FeaturedBooks from '../src/featuredbooks/FeaturedBooks';
+import Register from './register/Register';
+import LogIn from './register/LogIn';
 
 function App() {
   return (
@@ -16,7 +18,15 @@ function App() {
         <Route path="/" element={
           <div className="container-fluid p-0">
             <div className="row justify-content-center align-items-center text-center">
-              <div className="col-12 d-flex justify-content-center align-items-center">
+              <div className="col-12 d-flex justify-content-center align-items-center position-relative">
+                <div className="top-right-buttons">
+                  <Link to="/login">
+                    <button className="btn btn-primary mx-2">Log In</button>
+                  </Link>
+                  <Link to="/register">
+                    <button className="btn btn-secondary mx-2">Register</button>
+                  </Link>
+                </div>
                 <div className="mx-3"><Logo /></div>
                 <div className="mx-3"><SearchBar /></div>
                 <div className="mx-3"><Dropdown /></div>
@@ -31,6 +41,8 @@ function App() {
             </div>
           </div>
         } />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<LogIn />} />
         <Route path="/category/:categoryId" element={<BookDetails />} />
         <Route path="/results" element={<SearchResults />} /> 
       </Routes>
@@ -39,8 +51,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-

@@ -1,7 +1,7 @@
-/* App.css */
-
 body {
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* Adjust spacing and alignment */
@@ -37,15 +37,23 @@ body {
   color: #f9a620; /* Adjust icon color */
 }
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
 .books-container {
   padding: 20px;
 }
 
 .book-item {
   margin-bottom: 20px;
+}
+
+/* Styles for the top right buttons */
+.top-right-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+button.btn {
+  margin: 0 5px;
 }
