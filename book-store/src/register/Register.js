@@ -5,23 +5,23 @@ import { useNavigate } from 'react-router-dom';
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // State to store error messages
   const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError(''); // Reset error message
     try {
-      // Replace with your registration API endpoint
       const response = await axios.post('http://localhost:3001/register', {
         email,
         password
       });
 
-      // Check for successful registration response
       if (response.status === 201) {
-        // Redirect to home page
-        navigate('/');
+        navigate('/'); // Redirect to home page on successful registration
       }
     } catch (error) {
+      setError('Registration failed. Please try again.'); // Display error message
       console.error('Registration error:', error);
     }
   };
@@ -56,6 +56,7 @@ function Register() {
                     required
                   />
                 </div>
+                {error && <p className="text-danger">{error}</p>} {/* Display error message */}
                 <button type="submit" className="btn btn-primary btn-block mt-3">
                   Register
                 </button>

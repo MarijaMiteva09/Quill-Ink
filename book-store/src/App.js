@@ -10,6 +10,7 @@ import SearchResults from './menu/SearchResults';
 import FeaturedBooks from '../src/featuredbooks/FeaturedBooks';
 import Register from './register/Register';
 import LogIn from './register/LogIn';
+import Profile from './register/Profile';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
                   </Link>
                   <Link to="/register">
                     <button className="btn btn-secondary mx-2">Register</button>
+                  </Link>
+                  <Link to="/profile">
+                    <button className="btn btn-info mx-2">Profile</button> {/* Optional profile link */}
                   </Link>
                 </div>
                 <div className="mx-3"><Logo /></div>
@@ -43,6 +47,7 @@ function App() {
         } />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="/profile" element={<Profile />} /> {/* Add the Profile route */}
         <Route path="/category/:categoryId" element={<BookDetails />} />
         <Route path="/results" element={<SearchResults />} /> 
       </Routes>

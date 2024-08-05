@@ -5,23 +5,25 @@ import { useNavigate } from 'react-router-dom';
 function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // State to store error messages
   const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleLogIn = async (e) => {
     e.preventDefault();
+    setError(''); // Reset error message
     try {
-      // Replace with your login API endpoint
       const response = await axios.post('http://localhost:3001/login', {
         email,
         password
       });
 
-      // Check for successful login response
       if (response.status === 200) {
-        // Redirect to home page
-        navigate('/');
+        // Store the token if needed (e.g., in local storage)
+        localStorage.setItem('token', response.data.token);
+        navigate('/'); // Redirect to profile page on successful login
       }
     } catch (error) {
+      setError('Login failed. Please check your credentials and try again.'); // Display error message
       console.error('Login error:', error);
     }
   };
@@ -56,6 +58,7 @@ function LogIn() {
                     required
                   />
                 </div>
+                {error && <p className="text-danger">{error}</p>} {/* Display error message */}
                 <button type="submit" className="btn btn-primary btn-block mt-3">
                   Log In
                 </button>

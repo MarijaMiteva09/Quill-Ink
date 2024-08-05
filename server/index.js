@@ -8,7 +8,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Update this to your front-end URL
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(bodyParser.json()); // Middleware to parse JSON requests
 
 const db = mysql.createConnection({
@@ -26,6 +31,20 @@ db.connect(err => {
     }
     console.log('Connected to the database');
 });
+
+// Middleware to authenticate JWT
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
 
 // Registration Endpoint
 app.post('/register', async (req, res) => {
@@ -62,6 +81,19 @@ app.post('/login', (req, res) => {
         const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
 
         res.json({ token });
+    });
+});
+
+// User Profile Endpoint
+app.get('/profile', authenticateToken, (req, res) => {
+    const userId = req.user.id;
+
+    db.query('SELECT id, email FROM users WHERE id = ?', [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        if (results.length === 0) return res.status(404).json({ message: 'User not found' });
+
+        res.json(results[0]);
     });
 });
 
