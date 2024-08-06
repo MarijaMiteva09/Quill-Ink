@@ -31,11 +31,14 @@ const Dropdown = () => {
             </Link>
           </li>
         ))}
+        <li>
+          <Link to="/cart" className="dropdown-item">
+            Cart
+          </Link>
+        </li>
       </ul>
     </div>
   );
 };
 
 export default Dropdown;
-
-

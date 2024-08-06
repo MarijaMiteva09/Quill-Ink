@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Profile() {
+const Profile = () => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
@@ -16,16 +16,16 @@ function Profile() {
           return;
         }
 
+        // Fetch user profile
         const profileResponse = await axios.get('http://localhost:3001/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
-
         setUser(profileResponse.data);
 
+        // Fetch cart items
         const cartResponse = await axios.get('http://localhost:3001/cart', {
           headers: { Authorization: `Bearer ${token}` }
         });
-
         setCart(cartResponse.data);
       } catch (error) {
         console.error('Error fetching profile or cart:', error);
@@ -102,6 +102,6 @@ function Profile() {
       </div>
     </div>
   );
-}
+};
 
 export default Profile;

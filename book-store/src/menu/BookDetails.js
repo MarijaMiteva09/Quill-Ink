@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const BookDetails = () => {
   const { categoryId } = useParams();
@@ -25,6 +26,26 @@ const BookDetails = () => {
     }
   };
 
+  const addToCart = async (bookId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You must be logged in to add items to the cart.');
+        return;
+      }
+
+      await axios.post('http://localhost:3001/cart', { bookId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      alert('Book added to cart!');
+    } catch (error) {
+      console.error('Error adding book to cart:', error);
+      alert('Failed to add book to cart.');
+    }
+  };
+
   return (
     <div className="book-details">
       <h2>Books in Category: {categoryId}</h2>
@@ -42,6 +63,9 @@ const BookDetails = () => {
               <p><strong>Page Count:</strong> {book.volumeInfo.pageCount}</p>
               <p><strong>Categories:</strong> {book.volumeInfo.categories ? book.volumeInfo.categories.join(', ') : 'Unknown Category'}</p>
               <p><strong>Description:</strong> {book.volumeInfo.description}</p>
+              <button onClick={() => addToCart(book.id)} className="btn btn-primary">
+                Add to Cart
+              </button>
             </div>
           </li>
         ))}
@@ -51,4 +75,3 @@ const BookDetails = () => {
 };
 
 export default BookDetails;
-

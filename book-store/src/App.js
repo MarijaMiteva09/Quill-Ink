@@ -11,7 +11,7 @@ import FeaturedBooks from '../src/featuredbooks/FeaturedBooks';
 import Register from './register/Register';
 import LogIn from './register/LogIn';
 import Profile from './register/Profile';
-import PrivateRoute from './register/PrivateRoute'; 
+import Cart from './menu/Cart'; 
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
                     <button className="btn btn-secondary mx-2">Register</button>
                   </Link>
                   <Link to="/profile">
-                    <button className="btn btn-info mx-2">Profile</button> 
+                    <button className="btn btn-info mx-2">Profile</button>
                   </Link>
                 </div>
                 <div className="mx-3"><Logo /></div>
@@ -48,9 +48,10 @@ function App() {
         } />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LogIn />} />
-        <Route path="/profile" element={<PrivateRoute element={<Profile />} />} /> {/* Use PrivateRoute */}
+        <Route path="/profile" element={<Profile />} />
         <Route path="/category/:categoryId" element={<BookDetails />} />
-        <Route path="/results" element={<SearchResults />} /> 
+        <Route path="/results" element={<SearchResults />} />
+        <Route path="/cart" element={<Cart />} /> 
       </Routes>
     </BrowserRouter>
   );
