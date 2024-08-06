@@ -1,74 +1,66 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-function LogIn() {
+const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // State to store error messages
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogIn = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Reset error message
-    try {
-      const response = await axios.post('http://localhost:3001/login', {
-        email,
-        password
-      });
+    setLoading(true);
+    setError('');
 
-      if (response.status === 200) {
-        // Store the token if needed (e.g., in local storage)
-        localStorage.setItem('token', response.data.token);
-        navigate('/'); // Redirect to profile page on successful login
-      }
+    try {
+      const response = await axios.post('http://localhost:3001/login', { email, password });
+      const { token } = response.data;
+
+      localStorage.setItem('token', token);
+      navigate('/'); // Redirect to home page after login
     } catch (error) {
-      setError('Login failed. Please check your credentials and try again.'); // Display error message
-      console.error('Login error:', error);
+      console.error('Error logging in:', error);
+      setError('Invalid email or password');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h3>Log In</h3>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleLogIn}>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {error && <p className="text-danger">{error}</p>} {/* Display error message */}
-                <button type="submit" className="btn btn-primary btn-block mt-3">
-                  Log In
-                </button>
-              </form>
-            </div>
-          </div>
+      <h2>Log In</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-      </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? 'Logging In...' : 'Log In'}
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default LogIn;

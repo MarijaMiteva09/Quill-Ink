@@ -8,9 +8,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
+// Hardcoded JWT secret (not recommended for production)
+const jwtSecret = 'your_jwt_secret'; // Replace with your actual secret
+
 app.use(cors({
     origin: 'http://localhost:3000', // Update this to your front-end URL
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -39,7 +42,7 @@ const authenticateToken = (req, res, next) => {
 
     if (token == null) return res.sendStatus(401);
 
-    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+    jwt.verify(token, jwtSecret, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
         next();
@@ -50,14 +53,18 @@ const authenticateToken = (req, res, next) => {
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
   
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    // Insert user into database
-    db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err, results) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.status(201).json({ message: 'User registered successfully' });
-    });
+    try {
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+      
+        // Insert user into database
+        db.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashedPassword], (err, results) => {
+          if (err) return res.status(500).json({ error: err.message });
+          res.status(201).json({ message: 'User registered successfully' });
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
   
 // Login Endpoint
@@ -78,7 +85,7 @@ app.post('/login', (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         // Generate JWT
-        const token = jwt.sign({ id: user.id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email }, jwtSecret, { expiresIn: '1h' });
 
         res.json({ token });
     });
@@ -94,6 +101,38 @@ app.get('/profile', authenticateToken, (req, res) => {
         if (results.length === 0) return res.status(404).json({ message: 'User not found' });
 
         res.json(results[0]);
+    });
+});
+
+// Add Book to Cart
+app.post('/cart', authenticateToken, (req, res) => {
+    const { bookId } = req.body;
+    const userId = req.user.id;
+
+    db.query('INSERT INTO cart_items (user_id, book_id) VALUES (?, ?)', [userId, bookId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ message: 'Book added to cart' });
+    });
+});
+
+// Get Cart Items
+app.get('/cart', authenticateToken, (req, res) => {
+    const userId = req.user.id;
+
+    db.query('SELECT book_id FROM cart_items WHERE user_id = ?', [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+// Remove Book from Cart
+app.delete('/cart/:bookId', authenticateToken, (req, res) => {
+    const bookId = req.params.bookId;
+    const userId = req.user.id;
+
+    db.query('DELETE FROM cart_items WHERE user_id = ? AND book_id = ?', [userId, bookId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Book removed from cart' });
     });
 });
 

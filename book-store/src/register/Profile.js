@@ -4,37 +4,57 @@ import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [user, setUser] = useState(null);
+  const [cart, setCart] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch user profile information
-    const fetchProfile = async () => {
+    const fetchProfileAndCart = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          navigate('/login'); // Redirect to login if token is not present
+          navigate('/login');
           return;
         }
 
-        const response = await axios.get('http://localhost:3001/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        const profileResponse = await axios.get('http://localhost:3001/profile', {
+          headers: { Authorization: `Bearer ${token}` }
         });
 
-        setUser(response.data);
+        setUser(profileResponse.data);
+
+        const cartResponse = await axios.get('http://localhost:3001/cart', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setCart(cartResponse.data);
       } catch (error) {
-        console.error('Error fetching profile:', error);
-        navigate('/login'); // Redirect to login on error
+        console.error('Error fetching profile or cart:', error);
+        navigate('/login');
       }
     };
 
-    fetchProfile();
+    fetchProfileAndCart();
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from local storage
-    navigate('/'); // Redirect to home page
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
+  const removeFromCart = async (bookId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`http://localhost:3001/cart/${bookId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        setCart(cart.filter(book => book.bookId !== bookId));
+      }
+    } catch (error) {
+      console.error('Error removing book from cart:', error);
+      alert('Failed to remove book from cart.');
+    }
   };
 
   if (!user) {
@@ -54,6 +74,28 @@ function Profile() {
               <button onClick={handleLogout} className="btn btn-primary mt-3">
                 Log Out
               </button>
+            </div>
+          </div>
+          <div className="card mt-3">
+            <div className="card-header">
+              <h3>Shopping Cart</h3>
+            </div>
+            <div className="card-body">
+              {cart.length === 0 ? (
+                <p>No items in the cart.</p>
+              ) : (
+                <ul className="list-group">
+                  {cart.map((book) => (
+                    <li key={book.bookId} className="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <img src={book.thumbnail} alt={book.title} className="img-thumbnail" style={{ width: '50px', marginRight: '10px' }} />
+                        {book.title} by {book.authors}
+                      </div>
+                      <button className="btn btn-danger" onClick={() => removeFromCart(book.bookId)}>Remove</button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
