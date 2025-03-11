@@ -38,6 +38,28 @@ export async function POST(request: Request) {
   return NextResponse.json({ success: true, cart: userCart.items })
 }
 
+export async function PUT(request: Request) {
+  const { userId, bookId, quantity } = await request.json()
+
+  if (!userId || !bookId || quantity === undefined) {
+    return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 })
+  }
+
+  const userCart = cart.find((c) => c.userId === userId)
+  if (!userCart) {
+    return NextResponse.json({ success: false, message: "Cart not found" }, { status: 404 })
+  }
+
+  const existingItem = userCart.items.find((item) => item.bookId === bookId)
+  if (existingItem) {
+    existingItem.quantity = quantity
+  } else {
+    return NextResponse.json({ success: false, message: "Item not found in cart" }, { status: 404 })
+  }
+
+  return NextResponse.json({ success: true, cart: userCart.items })
+}
+
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url)
   const userId = searchParams.get("userId")
